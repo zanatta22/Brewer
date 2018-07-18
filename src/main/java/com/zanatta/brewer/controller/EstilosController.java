@@ -21,19 +21,19 @@ import com.zanatta.brewer.service.CadastroEstiloService;
 import com.zanatta.brewer.service.exception.NomeEstiloJaCadastradoException;
 
 @Controller
-@RequestMapping("estilos/")
+@RequestMapping("/estilos")
 public class EstilosController {
 	
 	@Autowired
 	private CadastroEstiloService cadastroServiceEstilo;
 	
-	@RequestMapping("novo")
+	@RequestMapping("/novo")
 	public ModelAndView novo(Estilo estilo){
 		return new ModelAndView ("estilo/CadastroEstilo");
 		
 	}
 	
-	@RequestMapping(value="novo", method = RequestMethod.POST)
+	@RequestMapping(value="/novo", method = RequestMethod.POST)
 	public ModelAndView cadastrar (@Valid Estilo estilo, BindingResult result, Model model, RedirectAttributes attributes){
 		
 		if(result.hasErrors()){
@@ -55,21 +55,16 @@ public class EstilosController {
 		
 	}
 	
-	@RequestMapping(value = "/estilos", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE})
-	public @ResponseBody ResponseEntity<?> salvar(@RequestBody @Valid Estilo estilo, BindingResult result ){
-		
-		if (result.hasErrors()){
+	@RequestMapping(method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE })
+	public @ResponseBody ResponseEntity<?> salvar(@RequestBody @Valid Estilo estilo, BindingResult result) {
+		if (result.hasErrors()) {
 			return ResponseEntity.badRequest().body(result.getFieldError("nome").getDefaultMessage());
 		}
 		
-		try {
-			estilo = cadastroServiceEstilo.salvar(estilo);
-		} catch (NomeEstiloJaCadastradoException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-		
+		estilo = cadastroServiceEstilo.salvar(estilo);
+			//ControllerAdviceExceptionHandler esta tratando
 		return ResponseEntity.ok(estilo);
 	}
-
+	
 }
 

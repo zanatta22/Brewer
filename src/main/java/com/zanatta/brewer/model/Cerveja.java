@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
@@ -73,7 +75,34 @@ public class Cerveja {
 	@ManyToOne
 	@JoinColumn(name = "codigo_estilo")
 	private Estilo estilo;
+	
+	private String foto;
+	
+	@Column(name = "content_type")
+	private String contentType;
+	
+	@PrePersist
+	@PreUpdate
+	private void prePersistUpdate(){
+		sku = sku.toUpperCase();
+	}
 
+	public String getFoto() {
+		return foto;
+	}
+	
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+	
+	public String getContentType() {
+		return contentType;
+	}
+	
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
+	
 	public String getSku() {
 		return sku;
 	}
